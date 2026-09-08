@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { calculateOptimizerSplit, type Card, type CardAllocation } from './optimizer';
 
-const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL as string) || "https://zeiytfzxagwbtuabqtnz.supabase.co";
-const supabaseKey = (import.meta.env.VITE_SUPABASE_ANON_KEY as string) || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InplaXl0Znp4YWd3YnR1YWJxdG56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4NjA1NjQsImV4cCI6MjEwNDQzNjU2NH0.d2Q2j6hj2ngsby2ICJEgEYFFVbaGjJygqGmBG-zkAyw";
+const supabaseUrl = "https://zeiytfzxagwbtuabqtnz.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InplaXl0Znp4YWd3YnR1YWJxdG56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4NjA1NjQsImV4cCI6MjEwNDQzNjU2NH0.d2Q2j6hj2ngsby2ICJEgEYFFVbaGjJygqGmBG-zkAyw";
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default function MilesCommandCenter() {
