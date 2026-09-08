@@ -31,29 +31,21 @@ export function calculateOptimizerSplit(cards: Card[], query: SpendQuery): CardA
   let remainingSpend = query.amount;
   const allocations: CardAllocation[] = [];
 
-  // 1. Filter out structurally invalid routes
   const eligibleCards = cards.filter(card => {
-    // Amaze exclusions: UOB blocks Amaze from UNI$
     if (query.paymentMethod === 'Amaze' && card.bank === 'UOB') return false;
-    // Physical chip insertion loses UOB Preferred & HSBC Rev contactless bonus
     if (query.paymentMethod === 'Physical' && card.card_name.includes('Preferred')) return false;
-    // Category match
     if (query.currency === 'FCY') return card.spend_route === 'FCY' || card.amaze_eligible;
     return card.spend_route === query.category || card.spend_route === 'Online';
   });
 
-  // 2. Sort by highest effective miles per dollar
   eligibleCards.sort((a, b) => {
     const aAvailable = a.monthly_cap_sgd - a.current_spent_sgd;
     const bAvailable = b.monthly_cap_sgd - b.current_spent_sgd;
-    
-    // Prioritize cards with remaining 4 mpd cap
     const aRate = aAvailable > 0 ? a.bonus_mpd : a.base_mpd;
     const bRate = bAvailable > 0 ? b.bonus_mpd : b.base_mpd;
     return bRate - aRate;
   });
 
-  // 3. Waterfall allocation through available caps
   for (const card of eligibleCards) {
     if (remainingSpend <= 0) break;
 
@@ -72,7 +64,6 @@ export function calculateOptimizerSplit(cards: Card[], query: SpendQuery): CardA
     }
   }
 
-  // 4. Handle spillover (if purchase exceeds all 4 mpd caps)
   if (remainingSpend > 0) {
     const fallbackCard = cards.find(c => c.card_name === 'SC Journey') || cards[0];
     const rate = query.currency === 'FCY' ? 2.0 : 1.2;
